@@ -1,8 +1,8 @@
 import requests
-import json
+import random
 
-# ADD KEY BEFORE USING!
 TMDB_PATH = "https://api.themoviedb.org/3/discover/movie"
+TMDB_API_KEY =  # ADD API KEY HERE BEFORE USING :)
 
 
 def get_horror_movie():
@@ -18,13 +18,11 @@ def get_horror_movie():
 
     movie_titles = []
 
-    # each dictionary in response["results"] is a movie
-    # each movie dictionary has a key called "title"
-
     for movie in response["results"]:
         movie_titles.append(movie["title"])
 
-    print(f"response body: {movie_titles}")
+    random_number = random.randint(0, len(movie_titles)-1)
+    print(movie_titles[random_number])
 
 
 get_horror_movie()
