@@ -12,6 +12,8 @@ TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
 genres_bp = Blueprint("genres_bp", __name__, url_prefix="/genres")
 eras_bp = Blueprint("eras_bp", __name__, url_prefix="/eras")
 runtime_bp = Blueprint("runtime_bp", __name__, url_prefix="/runtime")
+end_session_bp = Blueprint("end_session_bp", __name__,
+                           url_prefix="/end_session")
 
 
 @genres_bp.route("", methods=["POST"])
@@ -54,3 +56,10 @@ def post_runtime_preferences():
     response_string = f"Recorded your preference for: {request_body['runtime']}"
 
     return response_string
+
+
+@end_session_bp.route("/<session_id>", methods=["DELETE"])
+def end_current_session(session_id):
+    """Ends current session by deleting temporary information from the sessions database"""
+
+    # TODO: Remove data from the database
