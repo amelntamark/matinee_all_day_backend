@@ -6,6 +6,8 @@ from flask import Flask, Blueprint, request, jsonify, make_response, abort
 
 load_dotenv()
 
+# Note: refactor endpoints to match /sessions and /users. Include all preferences in one POST request.
+
 TMDB_PATH = "https://api.themoviedb.org/3/discover/movie"
 TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
 

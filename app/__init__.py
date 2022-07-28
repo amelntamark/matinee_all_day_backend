@@ -29,6 +29,8 @@ def create_app(test_config=None):
     # Register Blueprints here
     from .sessions_routes import sessions_bp
     app.register_blueprint(sessions_bp)
+    from .users_routes import users_bp
+    app.register_blueprint(users_bp)
 
     from .horror_route import horror_bp  # This BP is a test
     app.register_blueprint(horror_bp)
