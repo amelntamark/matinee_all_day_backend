@@ -10,6 +10,7 @@ TMDB_PATH = "https://api.themoviedb.org/3/discover/movie"
 TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
 
 genres_bp = Blueprint("genres_bp", __name__, url_prefix="/genres")
+eras_bp = Blueprint("eras_bp", __name__, url_prefix="/eras")
 
 
 @genres_bp.route("", methods=["POST"])
@@ -18,3 +19,11 @@ def post_genre_preferences():
     Requests should be in JSON format per this example: {"genres": ["horror", "thriller", "drama"]}"""
 
     # Validate data in request body. If valid, add to session database.
+
+
+@eras_bp.route("", methods=["POST"])
+def post_era_preferences():
+    """Posts preferences for release dates (by decades) to MAD API.
+    Request should be in JSON format: {"eras": ["1980s", "1990s", "2000s", "2010s", "2020s"]}"""
+
+    # Validate data and add to session database.
