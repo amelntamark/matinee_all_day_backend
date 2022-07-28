@@ -4,6 +4,7 @@ import random
 from dotenv import load_dotenv
 from flask import Blueprint, request, jsonify, make_response, abort
 
+load_dotenv()
 
 TMDB_PATH = "https://api.themoviedb.org/3/discover/movie"
 TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
