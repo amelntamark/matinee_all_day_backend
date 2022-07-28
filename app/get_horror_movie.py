@@ -1,8 +1,12 @@
+import os
 import requests
 import random
+from dotenv import load_dotenv
+from flask import Blueprint, request, jsonify, make_response, abort
+
 
 TMDB_PATH = "https://api.themoviedb.org/3/discover/movie"
-TMDB_API_KEY =  # ADD API KEY HERE BEFORE USING :)
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
 
 
 def get_horror_movie():
