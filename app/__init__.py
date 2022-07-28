@@ -9,12 +9,13 @@ def create_app(test_config=None):
     app = Flask(__name__)
 
     # Register Blueprints here
-    from .routes import genres_bp, eras_bp, runtime_bp, end_session_bp, create_user_bp
+    from .routes import genres_bp, eras_bp, runtime_bp, end_session_bp, create_user_bp, add_to_seen_bp
     app.register_blueprint(genres_bp)
     app.register_blueprint(eras_bp)
     app.register_blueprint(runtime_bp)
     app.register_blueprint(end_session_bp)
     app.register_blueprint(create_user_bp)
+    app.register_blueprint(add_to_seen_bp)
 
     from .horror_route import horror_bp  # This BP is a test
     app.register_blueprint(horror_bp)

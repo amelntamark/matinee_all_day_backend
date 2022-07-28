@@ -16,6 +16,8 @@ end_session_bp = Blueprint("end_session_bp", __name__,
                            url_prefix="/end_session")
 create_user_bp = Blueprint("create_user_bp", __name__,
                            url_prefix="/create_user")
+add_to_seen_bp = Blueprint("add_to_seen_bp", __name__,
+                           url_prefix="/add_to_seen")
 
 
 @genres_bp.route("", methods=["POST"])
@@ -73,3 +75,10 @@ def create_user():
 
     # TODO: Figure out shape of request and add user to database with unique primary key.
     # Will probably also need to verify that user/username does not already exist.
+
+
+@add_to_seen_bp.route("/<user_id>/<movie_id>", methods=["PATCH"])
+def add_to_users_seen_list(user_id, movie_id):
+    """Adds a movie's TMdB ID to a users seen list"""
+
+    # TODO: validate data and add the TMdB ID of a movie to the seen column in the user database.
