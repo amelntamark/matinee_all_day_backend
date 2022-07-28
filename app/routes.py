@@ -19,7 +19,7 @@ def post_genre_preferences():
     """Posts genre preferences from user to the MAD API.
     Requests should be in JSON format per this example: {"genres": ["horror", "thriller", "drama"]}"""
 
-    # Validate data in request body. If valid, add to session database.
+    # TODO: Validate data in request body. If valid, add to session database.
 
     # Basic tester implementation
     request_body = request.get_json()
@@ -33,7 +33,13 @@ def post_era_preferences():
     """Posts preferences for release dates (by decades) to MAD API.
     Request should be in JSON format: {"eras": ["1980s", "1990s", "2000s", "2010s", "2020s"]}"""
 
-    # Validate data and add to session database.
+    # TODO: Validate data and add to session database.
+
+    # Basic tester implementation
+    request_body = request.get_json()
+    response_string = f"Recorded your preference for: {request_body['eras']}"
+
+    return response_string
 
 
 @runtime_bp.route("", methods=["POST"])
@@ -41,4 +47,10 @@ def post_runtime_preferences():
     """Posts user's runtime preferences to MAD API.
     Request should be in JSON format: {"runtime": "< 120 mins"}"""
 
-    # Validate data and add to session database.
+    # TODO: Validate data and add to session database.
+
+    # Basic tester implementation
+    request_body = request.get_json()
+    response_string = f"Recorded your preference for: {request_body['runtime']}"
+
+    return response_string
