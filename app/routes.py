@@ -14,6 +14,8 @@ eras_bp = Blueprint("eras_bp", __name__, url_prefix="/eras")
 runtime_bp = Blueprint("runtime_bp", __name__, url_prefix="/runtime")
 end_session_bp = Blueprint("end_session_bp", __name__,
                            url_prefix="/end_session")
+create_user_bp = Blueprint("create_user_bp", __name__,
+                           url_prefix="/create_user")
 
 
 @genres_bp.route("", methods=["POST"])
@@ -63,3 +65,11 @@ def end_current_session(session_id):
     """Ends current session by deleting temporary information from the sessions database"""
 
     # TODO: Remove data from the database
+
+
+@create_user_bp.route("", methods=["POST"])
+def create_user():
+    """Adds new user to user database."""
+
+    # TODO: Figure out shape of request and add user to database with unique primary key.
+    # Will probably also need to verify that user/username does not already exist.
