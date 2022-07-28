@@ -18,6 +18,9 @@ def create_app(test_config=None):
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
         "SQLALCHEMY_DATABASE_URI")
 
+    db.init_app(app)
+    migrate.init_app(app, db)
+
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
     from app.models.user import User
