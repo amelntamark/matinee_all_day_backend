@@ -6,6 +6,7 @@
 2. run python3 -m venv venv to setup virtual environment
 3. run source venv/bin/activate to activate virtual environment
 4. run pip install -r requirements.txt to install requirements
+5. In the project root, create a .env file and add the value TMDB_API_KEY = {your_tmbd_api_key here}
 
 # Get a random horror movie
 
