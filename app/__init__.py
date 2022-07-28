@@ -1,21 +1,31 @@
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import os
 from dotenv import load_dotenv
-from flask import Flask
+from flask_cors import CORS
 
+
+db = SQLAlchemy()
+migrate = Migrate()
 load_dotenv()
 
 
 def create_app(test_config=None):
     app = Flask(__name__)
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+        "SQLALCHEMY_DATABASE_URI")
+
+    # Import models here for Alembic setup
+    # from app.models.ExampleModel import ExampleModel
+    from app.models.user import User
+    from app.models.session import Session
 
     # Register Blueprints here
-    from .routes import genres_bp, eras_bp, runtime_bp, end_session_bp, create_user_bp, add_to_seen_bp
-    app.register_blueprint(genres_bp)
-    app.register_blueprint(eras_bp)
-    app.register_blueprint(runtime_bp)
-    app.register_blueprint(end_session_bp)
-    app.register_blueprint(create_user_bp)
-    app.register_blueprint(add_to_seen_bp)
+    from .sessions_routes import sessions_bp
+    app.register_blueprint(sessions_bp)
 
     from .horror_route import horror_bp  # This BP is a test
     app.register_blueprint(horror_bp)
