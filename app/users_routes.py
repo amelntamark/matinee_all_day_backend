@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from sqlalchemy import func
 from app import db
-from app.models.user import User
+from app.models.user_data import UserData
 
 
 users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
@@ -11,8 +11,14 @@ users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
 def create_user():
     """Adds new user to user database."""
 
-    # TODO: Figure out shape of request and add user to database with unique primary key.
-    # Will probably also need to verify that user/username does not already exist.
+    request_body = request.get_json()
+    new_user = UserData(
+        username=request_body['username'])
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return f"User {new_user.username} created successfully :)"
 
 
 @users_bp.route("/<user_id>/<movie_id>", methods=["PATCH"])
