@@ -32,7 +32,7 @@ def create_app(test_config=None):
     from .users_routes import users_bp
     app.register_blueprint(users_bp)
 
-    from .horror_route import horror_bp  # This BP is a test
-    app.register_blueprint(horror_bp)
+    # from .horror_route import horror_bp  # This BP is a test
+    # app.register_blueprint(horror_bp)
 
     return app
