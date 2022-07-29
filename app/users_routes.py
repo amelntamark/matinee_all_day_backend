@@ -12,7 +12,7 @@ def create_user():
     """Adds new user to user database."""
     request_body = request.get_json()
     new_user = UserData(
-        user_name=request_body['username'])
+        username=request_body['username'])
 
     db.session.add(new_user)
     db.session.commit()
