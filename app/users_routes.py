@@ -4,7 +4,7 @@ from app import db
 from app.models.user import User
 
 
-users_bp = Blueprint('users_bp', __name__, url_prefix='users')
+users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
 
 
 @users_bp.route("", methods=["POST"])
