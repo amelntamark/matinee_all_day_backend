@@ -25,4 +25,15 @@ def create_user():
 def add_to_users_seen_list(user_id, movie_id):
     """Adds a movie's TMdB ID to a users seen list"""
 
-    # TODO: validate data and add the TMdB ID of a movie to the seen column in the user database.
+    # TODO: Get user's seen list. Append a new movie to it. Return it.
+    user = UserData.query.get(user_id)
+    seen_list = user.seen_it
+
+    if seen_list != None:  # User's seen it list is not empty
+        user.seen_it = user.seen_it + ", " + movie_id
+    else:  # User's seen it list is empty
+        user.seen_it = movie_id
+
+    db.session.commit()
+
+    return f"{user.username}'s seen list: {user.seen_it}."
