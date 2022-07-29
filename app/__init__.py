@@ -23,7 +23,7 @@ def create_app(test_config=None):
 
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
-    from app.models.user_data import UserData
+    from app.models.UserData import UserData
     from app.models.session import Session
 
     # Register Blueprints here

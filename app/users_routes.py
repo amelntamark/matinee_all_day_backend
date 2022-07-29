@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from sqlalchemy import func
 from app import db
-from app.models.user_data import UserData
+from app.models.UserData import UserData
 
 
 users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
@@ -10,15 +10,20 @@ users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
 @users_bp.route("", methods=["POST"])
 def create_user():
     """Adds new user to user database."""
+    request_body = request.get_json()
+    new_user = UserData(
+        user_name=request_body['user_name'], seen_it='')
 
     request_body = request.get_json()
     new_user = UserData(
-        username=request_body['username'])
+        user_name=request_body['user_name'])
 
     db.session.add(new_user)
     db.session.commit()
 
-    return f"User {new_user.username} created successfully :)"
+    return f"User {new_user.user_name} created successfully :)"
+
+    return f"User account for  {new_user.user_name} created."
 
 
 @users_bp.route("/<user_id>/<movie_id>", methods=["PATCH"])
