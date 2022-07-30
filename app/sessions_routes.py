@@ -12,42 +12,46 @@ TMDB_PATH = "https://api.themoviedb.org/3/discover/movie"
 TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
 
 # Gerne options on front end will be limited to these
-TMDB_GENRES = {"Action": 28,
-               "Adventure": 12,
-               "Animation": 16,
-               "Comedy": 35,
-               "Crime": 80,
-               "Documentary": 99,
-               "Drama": 18,
-               "Family": 10751,
-               "Fantasy": 14,
-               "History": 36,
-               "Horror": 27,
-               "Music": 10402,
-               "Mystery": 9648,
-               "Romance": 10749,
-               "Science Fiction": 878,
-               "TV Movie": 10770,
-               "Thriller": 53,
-               "War": 10752,
-               "Western": 37}
+TMDB_GENRES = {"Action": "28",
+               "Adventure": "12",
+               "Animation": "16",
+               "Comedy": "35",
+               "Crime": "80",
+               "Documentary": "99",
+               "Drama": "18",
+               "Family": "10751",
+               "Fantasy": "14",
+               "History": "36",
+               "Horror": "27",
+               "Music": "10402",
+               "Mystery": "9648",
+               "Romance": "10749",
+               "SciFi": "878",
+               #    "TV Movie": "10770",
+               "Thriller": "53",
+               "War": "10752",
+               "Western": "37"}
 
 
-TMDB_decades = {"1970s": "primary_release_date.gte : 1970-01-01T00:00:00.000Z, primary_release_date.lte: 1979-12-31T00:00:00.000Z",
-                "1980s": "primary_release_date.gte : 1980-01-01T00:00:00.000Z, primary_release_date.lte: 1989-12-31T00:00:00.000Z",
-                "1990s": "primary_release_date.gte : 1990-01-01T00:00:00.000Z, primary_release_date.lte: 1999-12-31T00:00:00.000Z",
-                "2000s": "primary_release_date.gte : 2000-01-01T00:00:00.000Z, primary_release_date.lte: 2009-12-31T00:00:00.000Z",
-                "2010s": "primary_release_date.gte : 2000-01-01T00:00:00.000Z, primary_release_date.lte: 2009-12-31T00:00:00.000Z",
-                "2020 onward": "primary_release_date.gte : 2020-01-01T00:00:00.000Z"}
+TMDB_DECADES = {"1970s": ["1970-01-01T00:00:00.000Z", "1979-12-31T00:00:00.000Z"],
+                "1980s": ["1980-01-01T00:00:00.000Z", "1989-12-31T00:00:00.000Z"],
+                "1990s": ["1990-01-01T00:00:00.000Z", "1999-12-31T00:00:00.000Z"],
+                "2000s": ["2000-01-01T00:00:00.000Z", "2009-12-31T00:00:00.000Z"],
+                "2010s": ["2000-01-01T00:00:00.000Z", "2009-12-31T00:00:00.000Z"],
+                "2020 onward": ["2020-01-01T00:00:00.000Z", ""]}
 
 # change user preferences to TMDB speak
 
 
 def translate_to_TMDB_params(session):
-    genre_prefernce_list = list(session.genre.split(" "))
-    for pref in genre_prefernce_list:
-        pref = TMDB_GENRES[pref]
-    tmdb_genres_str = " ".join(genre_prefernce_list)
+    genre_preference_list = list(session.genre.split(" "))
+    print(genre_preference_list)
+    tmdb_genre_list = []
+    for pref in genre_preference_list:
+        tmdb_genre_list.append(TMDB_GENRES[pref])
+    print(tmdb_genre_list)
+    tmdb_genres_str = ",".join(tmdb_genre_list)
+    print(tmdb_genres_str)
     tmdb_params = {
         "api_key": TMDB_API_KEY,
         "include_adult": False,
@@ -56,6 +60,10 @@ def translate_to_TMDB_params(session):
         "with_genres": tmdb_genres_str,
         "sort_by": "vote_average.desc",
         "vote_count.gte": "364"}
+    if session.era:
+        tmdb_params["primary_release_date.gte"] = TMDB_DECADES[session.era][0]
+        tmdb_params["primary_release_date.lte"] = TMDB_DECADES[session.era][1]
+    print(tmdb_params)
     return tmdb_params
 
 
@@ -91,7 +99,7 @@ def get_movie(session_id):
     response = requests.get(TMDB_PATH, params=tmdb_params)
     response = response.json()
 
-    return response
+    return response, tmdb_params
     # Now call the helper funciton to prepare query params
     # query_params =translate_to_TMDB_discover_params(session)
     # response = requests.get(TMDB_PATH, params=tmdb_params)
