@@ -13,7 +13,7 @@ TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
 
 
 def translate_to_TMDB_params(session):
-
+    pass
     # POST a session
 
 
