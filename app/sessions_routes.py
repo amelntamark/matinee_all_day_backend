@@ -12,6 +12,11 @@ TMDB_PATH = "https://api.themoviedb.org/3/discover/movie"
 TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
 
 
+def translate_to_TMDB_params(session):
+
+    # POST a session
+
+
 @sessions_bp.route("", methods=['POST'])
 def create_session():
     request_body = request.get_json()
@@ -22,6 +27,8 @@ def create_session():
     db.session.commit()
 
     return f"Preferences saved session_id = {new_session.session_id}. Ready to search"
+
+# DELETE a session
 
 
 @sessions_bp.route('/<session_id>', methods=['DELETE'])
