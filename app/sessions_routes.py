@@ -4,6 +4,7 @@ from app import db
 from app.models.session import Session
 import os
 import requests
+import random
 
 
 sessions_bp = Blueprint('sessions_bp', __name__, url_prefix='/sessions')
@@ -40,29 +41,32 @@ TMDB_DECADES = {"1970s": ["1970-01-01T00:00:00.000Z", "1979-12-31T00:00:00.000Z"
                 "2010s": ["2000-01-01T00:00:00.000Z", "2009-12-31T00:00:00.000Z"],
                 "2020 onward": ["2020-01-01T00:00:00.000Z", ""]}
 
+TMDB_RUNTIMES = {"90 minutes": "96",
+                 "2 hours": "126"}
+
 # change user preferences to TMDB speak
 
 
 def translate_to_TMDB_params(session):
-    genre_preference_list = list(session.genre.split(" "))
-    print(genre_preference_list)
-    tmdb_genre_list = []
-    for pref in genre_preference_list:
-        tmdb_genre_list.append(TMDB_GENRES[pref])
-    print(tmdb_genre_list)
-    tmdb_genres_str = ",".join(tmdb_genre_list)
-    print(tmdb_genres_str)
     tmdb_params = {
         "api_key": TMDB_API_KEY,
         "include_adult": False,
-        "language": "en-US",
+        "with_original_language": "en",
         "page": 1,
-        "with_genres": tmdb_genres_str,
         "sort_by": "vote_average.desc",
         "vote_count.gte": "364"}
     if session.era:
         tmdb_params["primary_release_date.gte"] = TMDB_DECADES[session.era][0]
         tmdb_params["primary_release_date.lte"] = TMDB_DECADES[session.era][1]
+    if session.genre:
+        genre_preference_list = list(session.genre.split(" "))
+        tmdb_genre_list = []
+        for pref in genre_preference_list:
+            tmdb_genre_list.append(TMDB_GENRES[pref])
+        tmdb_genres_str = ",".join(tmdb_genre_list)
+        tmdb_params["with_genres"] = tmdb_genres_str
+    if session.runtime:
+        tmdb_params["with_runtime.lte"] = TMDB_RUNTIMES[session.runtime]
     print(tmdb_params)
     return tmdb_params
 
@@ -98,8 +102,6 @@ def get_movie(session_id):
     tmdb_params = translate_to_TMDB_params(session)
     response = requests.get(TMDB_PATH, params=tmdb_params)
     response = response.json()
+    random_num = random.randint(0, len(response["results"])-1)
 
-    return response, tmdb_params
-    # Now call the helper funciton to prepare query params
-    # query_params =translate_to_TMDB_discover_params(session)
-    # response = requests.get(TMDB_PATH, params=tmdb_params)
+    return response["results"][random_num], 200
