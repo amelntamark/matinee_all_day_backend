@@ -118,7 +118,6 @@ def get_movie(session_id):
     if session.user_id:
         user = UserData.query.get(session.user_id)
         while str(random_movie["id"]) in user.seen_it:
-            print(f"User has already seen {random_movie['title']}")
             random_movie = get_random_movie(response)
 
     return random_movie, 200
