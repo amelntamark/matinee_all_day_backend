@@ -69,8 +69,15 @@ def translate_to_TMDB_params(session):
         tmdb_params["with_genres"] = tmdb_genres_str
     if session.runtime:
         tmdb_params["with_runtime.lte"] = TMDB_RUNTIMES[session.runtime]
-    print(tmdb_params)
+    # print(tmdb_params)
     return tmdb_params
+
+
+def get_random_movie(json_response):
+    """Return a random movie from a JSON response"""
+    random_num = random.randint(0, len(json_response["results"])-1)
+    random_movie = json_response["results"][random_num]
+    return random_movie
 
 
 # POST a session
@@ -104,8 +111,14 @@ def get_movie(session_id):
     tmdb_params = translate_to_TMDB_params(session)
     response = requests.get(TMDB_PATH, params=tmdb_params)
     response = response.json()
-    random_num = random.randint(0, len(response["results"])-1)
 
-    return response["results"][random_num], 200
+    random_movie = get_random_movie(response)
 
-# May want to have a column in sessions table called user_id. If user is not logged in, value is null. Else, it's an int.
+    # If user is logged in:
+    if session.user_id:
+        user = UserData.query.get(session.user_id)
+        while str(random_movie["id"]) in user.seen_it:
+            print(f"User has already seen {random_movie['title']}")
+            random_movie = get_random_movie(response)
+
+    return random_movie, 200
