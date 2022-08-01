@@ -2,9 +2,11 @@ from flask import Blueprint, request, jsonify, make_response, abort
 from sqlalchemy import func
 from app import db
 from app.models.session import Session
+from app.models.UserData import UserData
 import os
 import requests
 import random
+from alembic import op
 
 
 sessions_bp = Blueprint('sessions_bp', __name__, url_prefix='/sessions')
@@ -67,8 +69,15 @@ def translate_to_TMDB_params(session):
         tmdb_params["with_genres"] = tmdb_genres_str
     if session.runtime:
         tmdb_params["with_runtime.lte"] = TMDB_RUNTIMES[session.runtime]
-    print(tmdb_params)
+    # print(tmdb_params)
     return tmdb_params
+
+
+def get_random_movie(json_response):
+    """Return a random movie from a JSON response"""
+    random_num = random.randint(0, len(json_response["results"])-1)
+    random_movie = json_response["results"][random_num]
+    return random_movie
 
 
 # POST a session
@@ -76,7 +85,7 @@ def translate_to_TMDB_params(session):
 def create_session():
     request_body = request.get_json()
     new_session = Session(
-        genre=request_body['genre'], era=request_body['era'], runtime=request_body['runtime'])
+        genre=request_body['genre'], era=request_body['era'], runtime=request_body['runtime'], user_id=request_body['user_id'])
 
     db.session.add(new_session)
     db.session.commit()
@@ -102,6 +111,13 @@ def get_movie(session_id):
     tmdb_params = translate_to_TMDB_params(session)
     response = requests.get(TMDB_PATH, params=tmdb_params)
     response = response.json()
-    random_num = random.randint(0, len(response["results"])-1)
 
-    return response["results"][random_num], 200
+    random_movie = get_random_movie(response)
+
+    # If user is logged in:
+    if session.user_id:
+        user = UserData.query.get(session.user_id)
+        while str(random_movie["id"]) in user.seen_it:
+            random_movie = get_random_movie(response)
+
+    return random_movie, 200
