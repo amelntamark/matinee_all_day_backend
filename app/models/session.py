@@ -6,3 +6,6 @@ class Session(db.Model):
     genre = db.Column(db.String)
     era = db.Column(db.String)
     runtime = db.Column(db.String)
+    # user_id = db.Column(db.Integer, db.ForeignKey('user_data.user_id'))
+    # user_data = db.relationship(
+    #     "UserData", backref=db.backref("user_data", uselist=False))

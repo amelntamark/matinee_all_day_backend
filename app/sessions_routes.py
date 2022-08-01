@@ -2,9 +2,11 @@ from flask import Blueprint, request, jsonify, make_response, abort
 from sqlalchemy import func
 from app import db
 from app.models.session import Session
+from app.models.UserData import UserData
 import os
 import requests
 import random
+from alembic import op
 
 
 sessions_bp = Blueprint('sessions_bp', __name__, url_prefix='/sessions')
@@ -105,3 +107,5 @@ def get_movie(session_id):
     random_num = random.randint(0, len(response["results"])-1)
 
     return response["results"][random_num], 200
+
+# May want to have a column in sessions table called user_id. If user is not logged in, value is null. Else, it's an int.
