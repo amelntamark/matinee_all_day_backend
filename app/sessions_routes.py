@@ -78,7 +78,7 @@ def translate_to_TMDB_params(session):
 def create_session():
     request_body = request.get_json()
     new_session = Session(
-        genre=request_body['genre'], era=request_body['era'], runtime=request_body['runtime'])
+        genre=request_body['genre'], era=request_body['era'], runtime=request_body['runtime'], user_id=request_body['user_id'])
 
     db.session.add(new_session)
     db.session.commit()
