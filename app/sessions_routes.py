@@ -50,10 +50,7 @@ def get_movie(session_id):
     If user is logged in, it will make sure user has not seen the movie already.
     """
     session = Session.query.get(session_id)
-    tmdb_params = translate_to_TMDB_params(session)
-    response = requests.get(TMDB_PATH, params=tmdb_params)
-    response = response.json()
-
+    response = call_tmdb(session_id)
     random_movie = get_random_movie(response)
 
     # If user is logged in:

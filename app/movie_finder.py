@@ -1,4 +1,6 @@
+from app.models.session import Session
 import random
+import requests
 import os
 
 TMDB_PATH = "https://api.themoviedb.org/3/discover/movie"
@@ -38,15 +40,17 @@ TMDB_RUNTIMES = {"90 minutes": "96",
 
 
 def translate_to_TMDB_params(session):
-    """Take user preferences and format for TMDB API call."""
+    """Takes user preferences and formats for TMDB API call."""
     tmdb_params = {
         "api_key": TMDB_API_KEY,
         "include_adult": False,
-        # Could we give the user option to see film recommendations in other langs?
         "with_original_language": "en",
         "page": 1,
         "sort_by": "vote_average.desc",
-        "vote_count.gte": "364"}
+        "vote_count.gte": "364",
+        "with_runtime.gte": "59"
+        # This is to help eliminate things that are not feature films e.g. music videos
+    }
 
     if session.era:
         tmdb_params["primary_release_date.gte"] = TMDB_DECADES[session.era][0]
@@ -66,8 +70,17 @@ def translate_to_TMDB_params(session):
     return tmdb_params
 
 
+def call_tmdb(session_id):
+    """Takes the id for a current session and returns a JSON response containing several movies"""
+    session = Session.query.get(session_id)
+    tmdb_params = translate_to_TMDB_params(session)
+    response = requests.get(TMDB_PATH, params=tmdb_params)
+    response = response.json()
+    return response
+
+
 def get_random_movie(json_response):
-    """Returns a random movie from a JSON response"""
+    """Takes a JSON response containing several movies and returns a random movie in JSON response."""
     random_num = random.randint(0, len(json_response["results"])-1)
     random_movie = json_response["results"][random_num]
     return random_movie
