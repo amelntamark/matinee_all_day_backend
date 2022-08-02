@@ -37,7 +37,7 @@ def store_recommendations(session_id):
     This method should only be called once per session ID to avoid crowding the database and making
     too many requests to TMDB API.
     """
-    # TODO: Add way to check method has not been called for session_id already. If it has, return 429.
+    # TODO: Add way to check method has not been called for session_id already. If it has, return error code and message.
     # Current thought is to add a column to session table called "movies_fetched" that is automatically set to false, then
     # changing this value to true when movie recs have been fetched. Then this function will check that value BEFORE calling
     # get_recommendations() and will return an error message if  recs already fetched.
@@ -68,7 +68,6 @@ def get_movie(session_id):
 @ sessions_bp.route('/<session_id>', methods=['DELETE'])
 def delete_session(session_id):
     """Deletes a session from the database."""
-    # TODO: add logic to delete the corresponding movie recs from the movie table in the db
     session = Session.query.get(session_id)
 
     # Delete movies in database
