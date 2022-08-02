@@ -71,6 +71,11 @@ def delete_session(session_id):
     # TODO: add logic to delete the corresponding movie recs from the movie table in the db
     session = Session.query.get(session_id)
 
+    # Delete movies in database
+    for movie in session.movies:
+        db.session.delete(movie)
+
+    # Delete session from database
     db.session.delete(session)
     db.session.commit()
 
