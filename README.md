@@ -11,4 +11,4 @@
 # Get a random horror movie
 
 1. Run the flask app by typing flask run in the terminal
-2. Visit http://localhost:5000/ in your browser to receive a random horr movie recommendation
+2. Access any of the endpoints specified in this document: https://docs.google.com/spreadsheets/d/1awWewqrFaqIEGPBde1CpaCJnZZsqSbWSU29VfZ4SEBs/edit#gid=0
