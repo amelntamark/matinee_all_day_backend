@@ -29,20 +29,8 @@ def create_session():
     return f"Preferences saved session_id = {new_session}. "
 
 
-# DELETE a session
-@ sessions_bp.route('/<session_id>', methods=['DELETE'])
-def delete_session(session_id):
-    """Deletes a session from the database."""
-    session = Session.query.get(session_id)
-
-    db.session.delete(session)
-    db.session.commit()
-
-    return f"Session {session.session_id} deleted.  The fun has ended"
-
-
-# PUT recommendations for this session into database
-# USE WITH CAUTION! PLEASE READ DOCSTRING
+# PUT recommendations for a session into database
+# PLEASE READ DOCSTRING BEFORE USING! :)
 @sessions_bp.route('/<session_id>', methods=['PUT'])
 def store_recommendations(session_id):
     """Calls function that gets recommendations and stores them in the database.
@@ -74,3 +62,16 @@ def get_movie(session_id):
             random_movie = get_random_movie(session_id)
 
     return jsonify(random_movie), 200
+
+
+# DELETE a session
+@ sessions_bp.route('/<session_id>', methods=['DELETE'])
+def delete_session(session_id):
+    """Deletes a session from the database."""
+    # TODO: add logic to delete the corresponding movie recs from the movie table in the db
+    session = Session.query.get(session_id)
+
+    db.session.delete(session)
+    db.session.commit()
+
+    return f"Session {session.session_id} deleted.  The fun has ended"
