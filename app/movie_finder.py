@@ -36,20 +36,22 @@ TMDB_DECADES = {"1970s": ["1970-01-01T00:00:00.000Z", "1979-12-31T00:00:00.000Z"
 TMDB_RUNTIMES = {"90 minutes": "96",
                  "2 hours": "126"}
 
-# change user preferences to TMDB speak
-
 
 def translate_to_TMDB_params(session):
+    """Take user preferences and format for TMDB API call."""
     tmdb_params = {
         "api_key": TMDB_API_KEY,
         "include_adult": False,
+        # Could we give the user option to see film recommendations in other langs?
         "with_original_language": "en",
         "page": 1,
         "sort_by": "vote_average.desc",
         "vote_count.gte": "364"}
+
     if session.era:
         tmdb_params["primary_release_date.gte"] = TMDB_DECADES[session.era][0]
         tmdb_params["primary_release_date.lte"] = TMDB_DECADES[session.era][1]
+
     if session.genre:
         genre_preference_list = list(session.genre.split(" "))
         tmdb_genre_list = []
@@ -57,6 +59,7 @@ def translate_to_TMDB_params(session):
             tmdb_genre_list.append(TMDB_GENRES[pref])
         tmdb_genres_str = ",".join(tmdb_genre_list)
         tmdb_params["with_genres"] = tmdb_genres_str
+
     if session.runtime:
         tmdb_params["with_runtime.lte"] = TMDB_RUNTIMES[session.runtime]
 

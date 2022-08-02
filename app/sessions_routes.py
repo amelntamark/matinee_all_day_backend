@@ -18,6 +18,7 @@ TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
 # POST a session
 @ sessions_bp.route("", methods=['POST'])
 def create_session():
+    """Creates a new session. Takes a request with a genre, era, runtime, and user_id."""
     request_body = request.get_json()
     new_session = Session(
         genre=request_body['genre'], era=request_body['era'], runtime=request_body['runtime'], user_id=request_body['user_id'])
@@ -27,11 +28,11 @@ def create_session():
 
     return f"Preferences saved session_id = {new_session}. "
 
+
 # DELETE a session
-
-
 @ sessions_bp.route('/<session_id>', methods=['DELETE'])
 def delete_session(session_id):
+    """Deletes a session from the database."""
     session = Session.query.get(session_id)
 
     db.session.delete(session)
@@ -39,9 +40,15 @@ def delete_session(session_id):
 
     return f"Session {session.session_id} deleted.  The fun has ended"
 
+# GET a movie
+
 
 @ sessions_bp.route('/<session_id>', methods=['GET'])
 def get_movie(session_id):
+    """
+    Returns a movie in JSON form based on preferences recorded during session. 
+    If user is logged in, it will make sure user has not seen the movie already.
+    """
     session = Session.query.get(session_id)
     tmdb_params = translate_to_TMDB_params(session)
     response = requests.get(TMDB_PATH, params=tmdb_params)
