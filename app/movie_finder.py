@@ -47,7 +47,6 @@ def translate_to_TMDB_params(session):
         "api_key": TMDB_API_KEY,
         "include_adult": False,
         "with_original_language": "en",
-        # "page": 1,
         "sort_by": "vote_average.desc",
         "vote_count.gte": "364",
         "with_runtime.gte": "59"
@@ -73,13 +72,12 @@ def translate_to_TMDB_params(session):
 
 
 def get_recommendations(session_id):
-    """Takes the id for a current session and returns a JSON response containing several movies"""
+    """Takes the id for a current session, makes a call to TMDB API, and stores 10 pages of results in database."""
     session = Session.query.get(session_id)
     tmdb_params = translate_to_TMDB_params(session)
-    # # This list will be populated by movies that meet user preferences in dictionary form
-    # possible_movies = []
 
-    # Get 10 pages of results from TMDB. Add all movies to the database, identifiable by session_id
+    # Get 10 pages of results from TMDB. Add all movies to the database, identifiable by session_id.
+    # TODO: Add logic for instance where there is less than 10 pages of results
     for i in range(1, 11):
         tmdb_params["page"] = str(i)
         response = requests.get(TMDB_PATH, params=tmdb_params)
@@ -95,14 +93,6 @@ def get_recommendations(session_id):
             )
             db.session.add(new_movie)
             db.session.commit()
-            # movie_dict = {
-            #     "id": movie["id"],
-            #     "title": movie["original_title"],
-            #     "overview": movie["overview"],
-            #     "release date": movie["release_date"],
-            #     "poster": movie["poster_path"]
-            # }
-            # possible_movies.append(movie_dict)
 
     return
 
