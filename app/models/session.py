@@ -9,3 +9,6 @@ class Session(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user_data.user_id'))
     user_data = db.relationship(
         "UserData", backref=db.backref("user_data", uselist=False))
+    movies = db.relationship(
+        "Movie", back_populates="session"
+    )

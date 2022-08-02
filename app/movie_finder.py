@@ -1,4 +1,6 @@
 from app.models.session import Session
+from app.models.Movie import Movie
+from app import db
 import random
 import requests
 import os
@@ -45,7 +47,7 @@ def translate_to_TMDB_params(session):
         "api_key": TMDB_API_KEY,
         "include_adult": False,
         "with_original_language": "en",
-        "page": 1,
+        # "page": 1,
         "sort_by": "vote_average.desc",
         "vote_count.gte": "364",
         "with_runtime.gte": "59"
@@ -70,17 +72,57 @@ def translate_to_TMDB_params(session):
     return tmdb_params
 
 
-def call_tmdb(session_id):
+def get_recommendations(session_id):
     """Takes the id for a current session and returns a JSON response containing several movies"""
     session = Session.query.get(session_id)
     tmdb_params = translate_to_TMDB_params(session)
-    response = requests.get(TMDB_PATH, params=tmdb_params)
-    response = response.json()
-    return response
+    # # This list will be populated by movies that meet user preferences in dictionary form
+    # possible_movies = []
+
+    # Get 10 pages of results from TMDB. Add all movies to the database, identifiable by session_id
+    for i in range(1, 11):
+        tmdb_params["page"] = str(i)
+        response = requests.get(TMDB_PATH, params=tmdb_params)
+        response = response.json()
+        for movie in response["results"]:
+            new_movie = Movie(
+                tmdb_id=int(movie["id"]),
+                title=movie["original_title"],
+                overview=movie["overview"],
+                release_date=movie["release_date"],
+                poster=movie["poster_path"],
+                session_id=session_id
+            )
+            db.session.add(new_movie)
+            db.session.commit()
+            # movie_dict = {
+            #     "id": movie["id"],
+            #     "title": movie["original_title"],
+            #     "overview": movie["overview"],
+            #     "release date": movie["release_date"],
+            #     "poster": movie["poster_path"]
+            # }
+            # possible_movies.append(movie_dict)
+
+    return
 
 
-def get_random_movie(json_response):
-    """Takes a JSON response containing several movies and returns a random movie in JSON response."""
-    random_num = random.randint(0, len(json_response["results"])-1)
-    random_movie = json_response["results"][random_num]
+def get_random_movie(session_id):
+    """Takes a session id, queries the database, and returns a random movie in dictionary form."""
+
+    # Get all movies from database with session ID
+    session = Session.query.get(session_id)
+    movie_recs = []
+    for movie in session.movies:
+        movie_recs.append({
+            "id": movie.tmdb_id,
+            "title": movie.title,
+            "overview": movie.overview,
+            "release_date": movie.release_date,
+            "poster": movie.poster
+        })
+
+    random_num = random.randint(0, len(movie_recs))
+    random_movie = movie_recs[random_num]
+
     return random_movie
