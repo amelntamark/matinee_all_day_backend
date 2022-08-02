@@ -40,23 +40,37 @@ def delete_session(session_id):
 
     return f"Session {session.session_id} deleted.  The fun has ended"
 
+
+# PUT recommendations for this session into database
+# USE WITH CAUTION! PLEASE READ DOCSTRING
+@sessions_bp.route('/<session_id>', methods=['PUT'])
+def store_recommendations(session_id):
+    """Calls function that gets recommendations and stores them in the database.
+    This method should only be called once per session ID to avoid crowding the database and making
+    too many requests to TMDB API.
+    """
+    # TODO: Add way to check method has not been called for session_id already. If it has, return 429.
+    # Current thought is to add a column to session table called "movies_fetched" that is automatically set to false, then
+    # changing this value to true when movie recs have been fetched. Then this function will check that value BEFORE calling
+    # get_recommendations() and will return an error message if  recs already fetched.
+    get_recommendations(session_id)
+
+    return {"message": "success"}, 201
+
+
 # GET a movie
-
-
 @ sessions_bp.route('/<session_id>', methods=['GET'])
 def get_movie(session_id):
     """
     Returns a movie in JSON form based on preferences recorded during session. 
-    If user is logged in, it will make sure user has not seen the movie already.
     """
     session = Session.query.get(session_id)
-    response = call_tmdb(session_id)
-    random_movie = get_random_movie(response)
+    random_movie = get_random_movie(session_id)
 
     # If user is logged in:
     if session.user_id:
         user = UserData.query.get(session.user_id)
         while str(random_movie["id"]) in user.seen_it:
-            random_movie = get_random_movie(response)
+            random_movie = get_random_movie(session_id)
 
-    return random_movie, 200
+    return jsonify(random_movie), 200
