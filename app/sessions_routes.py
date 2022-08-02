@@ -58,8 +58,9 @@ def get_movie(session_id):
     # If user is logged in:
     if session.user_id:
         user = UserData.query.get(session.user_id)
-        while str(random_movie["id"]) in user.seen_it:
-            random_movie = get_random_movie(session_id)
+        if user.seen_it:
+            while str(random_movie["id"]) in user.seen_it:
+                random_movie = get_random_movie(session_id)
 
     return jsonify(random_movie), 200
 
