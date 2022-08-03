@@ -32,4 +32,5 @@ def create_app(test_config=None):
     from .users_routes import users_bp
     app.register_blueprint(users_bp)
 
+    CORS(app)
     return app
