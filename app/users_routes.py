@@ -51,4 +51,4 @@ def login():
         db.session.add(user)
         db.session.commit()
 
-    return f"User found {user.user_id}"
+    return {"user_id": user.user_id}
