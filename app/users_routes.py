@@ -36,12 +36,3 @@ def add_to_users_seen_list(user_id, movie_id):
     db.session.commit()
 
     return f"{user.username}'s seen list: {user.seen_it}."
-
-
-# @users_bp.route("/<username>", methods=["GET"])
-# def check_user_login(username):
-#     try:
-#         user = UserData.query.get(username)
-#         return user.user_id
-#     except:
-#         return f"Username not found"
