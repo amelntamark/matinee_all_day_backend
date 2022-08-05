@@ -8,17 +8,21 @@ from app.models.UserData import UserData
 users_bp = Blueprint('users_bp', __name__, url_prefix='/users')
 
 
-# @users_bp.route("", methods=["POST"])
-# def create_user():
-#     """Adds new user to user database."""
-#     request_body = request.get_json()
-#     new_user = UserData(
-#         username=request_body['username'])
+@users_bp.route("/login",  methods=["POST"])
+def login():
+    """Searches for a user by username, if not found creates new user, and returns user_id"""
+    request_body = request.get_json()
+    username = request_body['username']
 
-#     db.session.add(new_user)
-#     db.session.commit()
+    user = UserData.query.filter_by(username=username).first()
+    if user is None:
+        user = UserData(
+            username=request_body['username'])
+        db.session.add(user)
+        db.session.commit()
+        return f"New user {user.username} created. User ID: {user.user_id}"
 
-#     return f"User {new_user.username} created successfully :)"
+    return f"Logged in as {user.username} created. User ID: {user.user_id}"
 
 
 @users_bp.route("/<user_id>/<movie_id>", methods=["PATCH"])
@@ -37,18 +41,14 @@ def add_to_users_seen_list(user_id, movie_id):
 
     return f"{user.username}'s seen list: {user.seen_it}."
 
+# @users_bp.route("", methods=["POST"])
+# def create_user():
+#     """Adds new user to user database."""
+#     request_body = request.get_json()
+#     new_user = UserData(
+#         username=request_body['username'])
 
-@users_bp.route("/login",  methods=["POST"])
-def login():
-    """Searchs for a user by username, if not found creates new user, and return user_id"""
-    request_body = request.get_json()
-    username = request_body['username']
+#     db.session.add(new_user)
+#     db.session.commit()
 
-    user = UserData.query.filter_by(username=username).first()
-    if user is None:
-        user = UserData(
-            username=request_body['username'])
-        db.session.add(user)
-        db.session.commit()
-
-    return f"User found {user.user_id}"
+#     return f"User {new_user.username} created successfully :)"
