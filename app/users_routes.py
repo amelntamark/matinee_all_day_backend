@@ -50,5 +50,12 @@ def login():
             username=request_body['username'])
         db.session.add(user)
         db.session.commit()
+        return jsonify({
+            "message": f"user {user.username} created. you are now logged in as {user.username}",
+            "id": f"{user.user_id}"
+        }), 201
 
-    return f"User found {user.user_id}"
+    return jsonify({
+        "message": f"you are now logged in as {user.username}",
+        "id": f"{user.user_id}"
+    }), 200
