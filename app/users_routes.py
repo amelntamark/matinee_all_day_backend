@@ -51,11 +51,13 @@ def login():
         db.session.add(user)
         db.session.commit()
         return jsonify({
-            "message": f"user {user.username} created. you are now logged in as {user.username}",
+            "message": f"User created",
+            "username": f"{user.username}",
             "id": user.user_id
         }), 201
 
     return jsonify({
-        "message": f"you are now logged in as {user.username}",
+        "message": f"You are now logged in.",
+        "username": f"{user.username}",
         "id": user.user_id
     }), 200
