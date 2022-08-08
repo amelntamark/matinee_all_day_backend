@@ -26,7 +26,7 @@ def create_session():
     db.session.add(new_session)
     db.session.commit()
 
-    return f"Preferences saved session_id = {new_session}. "
+    return {"session_id": new_session.session_id}
 
 
 # PUT recommendations for a session into database
