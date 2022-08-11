@@ -24,7 +24,6 @@ TMDB_GENRES = {"Action": "28",
                "Mystery": "9648",
                "Romance": "10749",
                "SciFi": "878",
-               #    "TV Movie": "10770",
                "Thriller": "53",
                "War": "10752",
                "Western": "37"}
@@ -35,7 +34,7 @@ TMDB_DECADES = {"1970s": ["1970-01-01T00:00:00.000Z", "1979-12-31T00:00:00.000Z"
                 "1990s": ["1990-01-01T00:00:00.000Z", "1999-12-31T00:00:00.000Z"],
                 "2000s": ["2000-01-01T00:00:00.000Z", "2009-12-31T00:00:00.000Z"],
                 "2010s": ["2010-01-01T00:00:00.000Z", "2019-12-31T00:00:00.000Z"],
-                "2020 onward": ["2020-01-01T00:00:00.000Z", ""]}
+                "2020 Onward": ["2020-01-01T00:00:00.000Z", "2022-06-01T00:00:00.000Z"]}
 
 TMDB_RUNTIMES = {"90 minutes": "96",
                  "2 hours": "126"}
@@ -50,7 +49,6 @@ def translate_to_TMDB_params(session):
         "sort_by": "vote_average.desc",
         "vote_count.gte": "364",
         "with_runtime.gte": "59"
-        # This is to help eliminate things that are not feature films e.g. music videos
     }
 
     if session.era:
@@ -78,6 +76,7 @@ def get_recommendations(session_id):
 
     # Get 10 pages of results from TMDB. Add all movies to the database, identifiable by session_id.
     # TODO: Add logic for instance where there is less than 10 pages of results
+
     for i in range(1, 11):
         tmdb_params["page"] = str(i)
         response = requests.get(TMDB_PATH, params=tmdb_params)

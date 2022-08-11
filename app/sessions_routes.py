@@ -80,3 +80,14 @@ def delete_session(session_id):
     db.session.commit()
 
     return f"Session {session.session_id} deleted.  The fun has ended"
+
+
+@ sessions_bp.route('/movies', methods=['DELETE'])
+def delete_all_movies():
+    movies = Movie.query.all()
+
+    for movie in movies:
+        db.session.delete(movie)
+        db.session.commit()
+
+    return f"Movie table empty"
