@@ -37,10 +37,6 @@ def store_recommendations(session_id):
     This method should only be called once per session ID to avoid crowding the database and making
     too many requests to TMDB API.
     """
-    # TODO: Add way to check method has not been called for session_id already. If it has, return error code and message.
-    # Current thought is to add a column to session table called "movies_fetched" that is automatically set to false, then
-    # changing this value to true when movie recs have been fetched. Then this function will check that value BEFORE calling
-    # get_recommendations() and will return an error message if  recs already fetched.
     get_recommendations(session_id)
 
     return {"message": "success"}, 201

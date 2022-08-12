@@ -47,7 +47,7 @@ def translate_to_TMDB_params(session):
         "include_adult": False,
         "with_original_language": "en",
         "sort_by": "vote_average.desc",
-        "vote_count.gte": "364",
+        "vote_count.gte": "42",
         "with_runtime.gte": "59"
     }
 
