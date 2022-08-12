@@ -47,7 +47,7 @@ def translate_to_TMDB_params(session):
         "include_adult": False,
         "with_original_language": "en",
         "sort_by": "vote_average.desc",
-        "vote_count.gte": "42",
+        "vote_count.gte": "346",
         "with_runtime.gte": "59"
     }
 
@@ -62,6 +62,8 @@ def translate_to_TMDB_params(session):
             tmdb_genre_list.append(TMDB_GENRES[pref])
         tmdb_genres_str = ",".join(tmdb_genre_list)
         tmdb_params["with_genres"] = tmdb_genres_str
+        if len(session.genre) > 1:
+            tmdb_params["vote_count.gte"] = "15"
 
     if session.runtime:
         tmdb_params["with_runtime.lte"] = TMDB_RUNTIMES[session.runtime]
