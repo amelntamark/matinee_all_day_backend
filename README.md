@@ -2,8 +2,9 @@
 
 Matinee All Day is a movie recommendation app created by Jodi Denney and Amel Ntamark as their capstone project for Ada Developer's Academy. This repo contains the backend logic for the app.
 
-[View the deployed project here](http://all-day-matinee.herokuapp.com/)
-[View the frontend repo here](https://github.com/J-J-D/Capstone)
+[View the deployed project here].(http://all-day-matinee.herokuapp.com/)
+
+[View the frontend repo here].(https://github.com/J-J-D/Capstone)
 
 ## Setup
 
