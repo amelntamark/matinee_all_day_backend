@@ -77,8 +77,7 @@ def get_recommendations(session_id):
     tmdb_params = translate_to_TMDB_params(session)
 
     # Get 10 pages of results from TMDB. Add all movies to the database, identifiable by session_id.
-    # TODO: Add logic for instance where there is less than 10 pages of results
-
+  
     for i in range(1, 11):
         tmdb_params["page"] = str(i)
         response = requests.get(TMDB_PATH, params=tmdb_params)
